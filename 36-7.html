@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Hệ thống Đăng nhập/Đăng ký</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex align-items-center justify-content-center vh-100">
+  <div id="loginPage" class="container" style="max-width: 400px;">
+    <h2 class="text-center">Đăng nhập</h2>
+    <form id="loginForm">
+      <input class="form-control mb-2" type="text" name="username" placeholder="Tên đăng nhập" required>
+      <input class="form-control mb-2" type="password" name="password" placeholder="Mật khẩu" required>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="rememberMe">
+        <label class="form-check-label" for="rememberMe">Ghi nhớ tôi</label>
+      </div>
+      <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
+    </form>
+
+    <hr>
+    <h2 class="text-center">Đăng ký</h2>
+    <form id="registerForm">
+      <input class="form-control mb-2" type="text" name="username" placeholder="Tên đăng nhập" required>
+      <input class="form-control mb-2" type="password" name="password" placeholder="Mật khẩu" required>
+      <button class="btn btn-success w-100" type="submit">Đăng ký</button>
+    </form>
+  </div>
+
+  <div id="homePage" class="container text-center d-none">
+    <h1 id="welcomeMessage">Chào mừng!</h1>
+    <button class="btn btn-danger mt-3" onclick="logout()">Đăng xuất</button>
+  </div>
+
+  <script>
+    const loginPage = document.getElementById("loginPage");
+    const homePage = document.getElementById("homePage");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const welcomeMessage = document.getElementById("welcomeMessage");
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    function showHome(username) {
+      welcomeMessage.innerText = "Chào mừng, " + username + "!";
+      loginPage.classList.add("d-none");
+      homePage.classList.remove("d-none");
+    }
+
+    function logout() {
+      localStorage.removeItem("userLogin");
+      homePage.classList.add("d-none");
+      loginPage.classList.remove("d-none");
+    }
+
+    loginForm.onsubmit = function (e) {
+      e.preventDefault();
+      const username = loginForm.username.value.trim();
+      const password = loginForm.password.value;
+      const remember = document.getElementById("rememberMe").checked;
+
+      const user = users.find(u => u.username === username && u.password === password);
+      if (!user) {
+        alert("Sai tên đăng nhập hoặc mật khẩu");
+        return;
+      }
+
+      if (remember) {
+        localStorage.setItem("userLogin", username);
+      }
+      showHome(username);
+    };
+
+    registerForm.onsubmit = function (e) {
+      e.preventDefault();
+      const username = registerForm.username.value.trim();
+      const password = registerForm.password.value;
+
+      if (users.find(u => u.username === username)) {
+        alert("Tên đăng nhập đã tồn tại!");
+        return;
+      }
+
+      users.push({ username, password });
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Đăng ký thành công!");
+      registerForm.reset();
+    };
+
+    // Tự động đăng nhập nếu đã lưu trạng thái
+    const userLogin = localStorage.getItem("userLogin");
+    if (userLogin) {
+      showHome(userLogin);
+    }
+  </script>
+</body>
+</html>

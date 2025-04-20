@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Bạn thích món nào?</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f7f9fb;
+      padding: 30px;
+      font-family: sans-serif;
+    }
+    .card {
+      display: flex;
+      flex-direction: row;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      background: white;
+    }
+    .card img {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .card-title {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .like-count {
+      color: #d10000;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    .like-btn {
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h2 class="text-center fw-bold mb-4">Bạn thích món nào nhất? 🍲</h2>
+
+  <div id="food-list" class="container">
+
+    <!-- Món ăn sẽ được thêm tự động bằng JS -->
+
+  </div>
+
+  <script>
+    const foods = [
+      {
+        id: 'bunbo',
+        name: 'Bún bò Huế',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Banh_mi.jpg/320px-Banh_mi.jpg'
+      },
+      {
+        id: 'pho',
+        name: 'Phở bò Hà Nội',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Ph%E1%BB%9F_b%E1%BB%93.jpg/320px-Ph%E1%BB%9F_b%E1%BB%93.jpg'
+      },
+      {
+        id: 'comtam',
+        name: 'Cơm tấm Sài Gòn',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/C%C6%A1m_t%E1%BA%A5m.jpg/320px-C%C6%A1m_t%E1%BA%A5m.jpg'
+      }
+    ];
+
+    const container = document.getElementById('food-list');
+
+    foods.forEach(food => {
+      const likeKey = `likeCount_${food.id}`;
+      let count = localStorage.getItem(likeKey) || 0;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      card.innerHTML = `
+        <img src="${food.image}" alt="${food.name}">
+        <div>
+          <div class="card-title">${food.name}</div>
+          <div class="like-count" id="count-${food.id}">❤️ ${count} lượt thích</div>
+          <button class="btn btn-success like-btn" onclick="increaseLike('${food.id}')">Thích +1</button>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    function increaseLike(id) {
+      const key = `likeCount_${id}`;
+      let count = parseInt(localStorage.getItem(key)) || 0;
+      count += 1;
+      localStorage.setItem(key, count);
+      document.getElementById(`count-${id}`).textContent = `❤️ ${count} lượt thích`;
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

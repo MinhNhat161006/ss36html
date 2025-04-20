@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Xin chào!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      min-width: 300px;
+    }
+
+    input {
+      padding: 8px;
+      width: 80%;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #2962ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box" id="nameForm">
+    <h2>Nhập tên của bạn</h2>
+    <input type="text" id="nameInput" placeholder="Nhập tên...">
+    <button onclick="saveName()">Lưu</button>
+  </div>
+
+  <div class="box" id="greeting" style="display: none;">
+    <h2>Chào bạn, <span id="displayName"></span>!</h2>
+    <button onclick="changeName()">Đổi tên</button>
+  </div>
+
+  <script>
+    const nameForm = document.getElementById("nameForm");
+    const greeting = document.getElementById("greeting");
+    const nameInput = document.getElementById("nameInput");
+    const displayName = document.getElementById("displayName");
+
+    function saveName() {
+      const name = nameInput.value.trim();
+      if (name === "") {
+        alert("Vui lòng nhập tên!");
+        return;
+      }
+      localStorage.setItem("username", name);
+      showGreeting(name);
+    }
+
+    function showGreeting(name) {
+      displayName.textContent = name;
+      nameForm.style.display = "none";
+      greeting.style.display = "block";
+    }
+
+    function changeName() {
+      localStorage.removeItem("username");
+      nameForm.style.display = "block";
+      greeting.style.display = "none";
+    }
+
+    // Khi tải trang, kiểm tra đã có tên chưa
+    window.onload = () => {
+      const savedName = localStorage.getItem("username");
+      if (savedName) {
+        showGreeting(savedName);
+      }
+    };
+  </script>
+
+</body>
+</html>
